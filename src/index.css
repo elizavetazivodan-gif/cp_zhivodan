@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@theme {
+  --color-emerald-deep: #005d4b;
+  --color-fresh-mint: #a2e4b8;
+  --font-unbounded: 'Unbounded', sans-serif;
+  --font-sans: 'Open Sans', sans-serif;
+}
