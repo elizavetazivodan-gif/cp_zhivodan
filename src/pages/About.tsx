@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-/* Фото з папки src/assets/ */
+import cat from '../assets/cat-exclamation.png';
+
 import org1 from '../assets/org1.jpg';
 import org2 from '../assets/org2.jpg';
 import liza from '../assets/liza.jpg'; 
@@ -104,6 +106,7 @@ const TEAM: Member[] = [
 
 export default function About() {
   const [dark, setDark] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const panelBg = dark ? NIGHT : MINT;
   const textColor = dark ? MINT : DARK;
 
@@ -327,6 +330,8 @@ export default function About() {
 
         {/* кнопка */}
         <button
+          type="button"
+          onClick={() => setOpenModal(true)}
           style={{
             position: 'absolute',
             left: u(320),
@@ -357,10 +362,285 @@ export default function About() {
           <TeamMember key={m.role[0] + m.name[1]} m={m} dark={dark} />
         ))}
       </main>
+      {openModal && <RegistrationModal onClose={() => setOpenModal(false)} />}
     </div>
   );
 }
 
+function RegistrationModal({ onClose }: { onClose: () => void }) {
+  const [name, setName] = useState('');
+  const [group, setGroup] = useState('');
+  const [phone, setPhone] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
+  const [sent, setSent] = useState(false);
+  const eventName = 'ОСМ';
+  /* кнопка «НАДІСЛАТИ» активна, коли заповнені всі поля і натиснута плашка підтвердження */
+  const canSubmit = name.trim() !== '' && group.trim() !== '' && phone.trim() !== '' && confirmed;
+
+  /* закриття клавішею Esc */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return createPortal(
+    (    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        backgroundColor: 'rgba(6, 35, 28, 0.6)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        overflowY: 'auto',
+        scrollbarGutter: 'stable',
+        padding: `${u(40)} ${u(16)} ${u(40)}`,
+      }}
+    >
+      {/* котик у лівій частині екрану. з'являється лише після надсилання */}
+      {sent && (
+        <img
+          src={cat}
+          alt="Котик зі знаком оклику"
+          style={{
+            position: 'fixed',
+            left: u(-200),
+            bottom: u(0),
+            width: u(660),
+            height: u(880),
+            objectFit: 'contain',
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: 'relative',
+          margin: '0 auto',
+          width: `min(${u(900)}, calc(100vw - 32px))`,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: u(18),
+        }}
+      >
+        {/* перший прямокутник: заголовок */}
+        <h2
+          style={{
+            margin: 0,
+            width: '100%',
+            boxSizing: 'border-box',
+            borderRadius: u(70),
+            backgroundColor: GREEN,
+            color: MINT,
+            padding: `${u(14)} ${u(28)}`,
+            whiteSpace: 'nowrap',
+            textAlign: 'center',
+            textTransform: 'uppercase',
+            fontFamily: UNBOUNDED,
+            fontWeight: 700,
+            fontSize: f(24),
+            lineHeight: u(32),
+          }}
+        >
+          Форма реєстрації в «{eventName}»
+        </h2>
+
+        {/* другий прямокутник: поля форми */}
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            boxSizing: 'border-box',
+            borderRadius: u(60),
+            backgroundColor: DARK,
+            color: MINT,
+            padding: `${u(26)} ${u(44)} ${u(22)}`,
+          }}
+        >
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Закрити"
+            style={{
+              position: 'absolute',
+              top: u(22),
+              right: u(22),
+              width: u(34),
+              height: u(34),
+              borderRadius: '50%',
+              border: 0,
+              backgroundColor: MINT,
+              color: DARK,
+              cursor: 'pointer',
+              fontFamily: UNBOUNDED,
+              fontSize: f(14),
+              lineHeight: 1,
+            }}
+          >
+            ✕
+          </button>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (canSubmit) setSent(true);
+            }}
+            style={{ display: 'flex', flexDirection: 'column', gap: u(14) }}
+          >
+            <fieldset
+              disabled={sent}
+              style={{ border: 0, margin: 0, padding: 0, minWidth: 0, display: 'flex', flexDirection: 'column', gap: u(14), opacity: sent ? 0.6 : 1 }}
+            >
+            <Field label="ПІБ для реєстрації" name="fullName" value={name} onChange={setName} />
+            <Field label="Назва групи у форматі “ХХХ-ХХХ”" name="group" value={group} onChange={setGroup} />
+            <Field label="Номер телефону для зворотного зв’язку" name="phone" type="tel" value={phone} onChange={setPhone} />
+
+            {/* плашка підтвердження */}
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={confirmed}
+                onClick={() => setConfirmed((c) => !c)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: u(20),
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  padding: `${u(10)} ${u(20)}`,
+                  borderRadius: u(40),
+                  border: 0,
+                  backgroundColor: MINT,
+                  color: DARK,
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  fontFamily: UNBOUNDED,
+                  fontWeight: 400,
+                  fontSize: f(22),
+                  lineHeight: u(30),
+                }}
+              >
+                <span
+                  style={{
+                    flexShrink: 0,
+                    width: u(44),
+                    height: u(44),
+                    borderRadius: '50%',
+                    boxSizing: 'border-box',
+                    border: `${u(4)} solid ${GREEN}`,
+                    backgroundColor: '#FFFFFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {confirmed && <span style={{ width: u(22), height: u(22), borderRadius: '50%', backgroundColor: GREEN }} />}
+                </span>
+                <span>Я підтверджую надсилання своєї реєстраційної форми в «{eventName}»</span>
+              </button>
+
+            {!sent && (
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                style={{
+                  alignSelf: 'center',
+                  width: u(260),
+                  height: u(64),
+                  borderRadius: 9999,
+                  border: 0,
+                  backgroundColor: GREEN,
+                  color: MINT,
+                  cursor: canSubmit ? 'pointer' : 'not-allowed',
+                  opacity: canSubmit ? 1 : 0.5,
+                  fontFamily: UNBOUNDED,
+                  fontWeight: 500,
+                  fontSize: f(28),
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                НАДІСЛАТИ
+              </button>
+            )}
+            </fieldset>
+          </form>
+        </div>
+
+        {sent && (
+          <p
+            style={{
+              margin: 0,
+              padding: `0 ${u(40)}`,
+              textAlign: 'center',
+              fontFamily: UNBOUNDED,
+              fontWeight: 700,
+              fontSize: f(34),
+              lineHeight: u(42),
+              color: MINT,
+            }}
+          >
+            Дякуємо за реєстрацію! Незабаром твою форму обов’язково опрацює адміністратор
+          </p>
+        )}
+
+      </div>
+    </div>
+    ),
+    document.body
+  );
+}
+
+/* поле вводу з підписом */
+function Field({
+  label,
+  name,
+  value,
+  onChange,
+  type = 'text',
+}: {
+  label: string;
+  name: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}) {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: u(12) }}>
+      <span style={{ fontFamily: UNBOUNDED, fontWeight: 400, fontSize: f(22), lineHeight: u(30) }}>{label}</span>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          boxSizing: 'border-box',
+          width: '100%',
+          height: u(44),
+          borderRadius: 9999,
+          border: 0,
+          outline: 'none',
+          backgroundColor: MINT,
+          color: DARK,
+          padding: `0 ${u(32)}`,
+          fontFamily: UNBOUNDED,
+          fontWeight: 400,
+          fontSize: f(22),
+        }}
+      />
+    </label>
+  );
+}
+
+/* овальне фото із зеленим півмісяцем збоку (два еліпси однакової висоти) */
 const abs = (x: number, y: number): React.CSSProperties => ({
   position: 'absolute',
   left: u(x),

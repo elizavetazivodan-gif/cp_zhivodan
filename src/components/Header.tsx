@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const SCALE = 0.625;
 const px = (n: number) => Math.round(n * SCALE);
@@ -229,6 +230,12 @@ export const Header: React.FC = () => {
       : {};
 
   return (
+    <div style={{ position: 'relative', isolation: 'isolate' }}>
+      {/* зелений фон за нижніми заокругленими кутами шапки */}
+      <div
+        aria-hidden="true"
+        style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: px(72), backgroundColor: GREEN, zIndex: -1 }}
+      />
     <header
       className="w-full box-border shadow-md overflow-hidden"
       style={{
@@ -257,7 +264,8 @@ export const Header: React.FC = () => {
         style={{
           gap: px(16),
           padding: `0 ${px(36)}px`,
-          borderRadius: px(56),
+          borderRadius: 9999,
+          overflow: 'hidden',
           backgroundColor: isMenuOpen ? GREEN : 'rgba(16, 139, 107, 0)',
           transition: `background-color ${COLOR_MS}ms ${EASE}`,
         }}
@@ -345,9 +353,9 @@ export const Header: React.FC = () => {
           style={{ gap: px(16) }}
           onMouseEnter={() => setHover(null)}
         >
-          <a href="/profile" className="hover:opacity-80 transition-opacity" aria-label="Профіль">
+          <Link to="/acc" className="hover:opacity-80 transition-opacity" aria-label="Акаунт">
             <ProfileIcon color={isMenuOpen ? '#FFFFFF' : GREEN} />
-          </a>
+          </Link>
           <button
             onClick={toggleMenu}
             className="hover:opacity-80 transition-opacity"
@@ -359,5 +367,6 @@ export const Header: React.FC = () => {
         </div>
       </div>
     </header>
+    </div>
   );
 };
