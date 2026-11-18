@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTheme } from '../theme';
 import { createPortal } from 'react-dom';
 
 import kitten from '../assets/kitten.jpeg';
@@ -30,7 +31,7 @@ const HERO_FADE = true;
 const INITIATIVE_NAME = 'Допоможімо безпритульним котикам';
 
 export default function Volunteering() {
-  const [dark, setDark] = useState(false);
+  const [dark, toggleDark] = useTheme();
   /* форма реєстрації на ініціативу: відкрита / закрита */
   const [openModal, setOpenModal] = useState(false);
   const panelBg = dark ? NIGHT : MINT;
@@ -69,7 +70,7 @@ export default function Volunteering() {
             Темна тема
           </span>
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => toggleDark()}
             role="switch"
             aria-checked={dark}
             aria-label="Темна тема"

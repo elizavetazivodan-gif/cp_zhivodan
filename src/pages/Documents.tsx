@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useTheme } from '../theme';
 
 import cat from '../assets/cat-notebook.png'; 
 import doc1 from '../assets/doc-statut.jpg'; 
@@ -26,7 +27,7 @@ const f = (n: number) => u(n * TEXT_SCALE);
 const HERO_FADE = true;
 
 export default function Documents() {
-  const [dark, setDark] = useState(false);
+  const [dark, toggleDark] = useTheme();
   const panelBg = dark ? NIGHT : MINT;
   const textColor = dark ? MINT : DARK;
 
@@ -65,7 +66,7 @@ export default function Documents() {
             Темна тема
           </span>
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => toggleDark()}
             role="switch"
             aria-checked={dark}
             aria-label="Темна тема"

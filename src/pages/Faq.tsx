@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../theme';
 
 import cat from '../assets/cat-exclamation.png'; 
 
@@ -67,7 +68,7 @@ const fieldStyle: React.CSSProperties = {
 };
 
 export default function Faq() {
-  const [dark, setDark] = useState(false);
+  const [dark, toggleDark] = useTheme();
   const [contact, setContact] = useState<'anon' | 'contact'>('anon');
   const [name, setName] = useState('');
   const [question, setQuestion] = useState('');
@@ -101,7 +102,7 @@ export default function Faq() {
             Темна тема
           </span>
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => toggleDark()}
             role="switch"
             aria-checked={dark}
             aria-label="Темна тема"

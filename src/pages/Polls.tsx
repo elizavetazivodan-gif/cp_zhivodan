@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTheme } from '../theme';
 
 import cat from '../assets/cat-exclamation.png'; 
 
@@ -78,7 +79,7 @@ const pollText: React.CSSProperties = {
 };
 
 export default function Polls() {
-  const [dark, setDark] = useState(false);
+  const [dark, toggleDark] = useTheme();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
   const pick = (key: string, value: string) => setAnswers((a) => ({ ...a, [key]: value }));
@@ -110,7 +111,7 @@ export default function Polls() {
             Темна тема
           </span>
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => toggleDark()}
             role="switch"
             aria-checked={dark}
             aria-label="Темна тема"

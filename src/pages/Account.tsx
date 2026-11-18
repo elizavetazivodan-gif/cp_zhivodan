@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useTheme } from '../theme';
 import cat from '../assets/cat-helmet.png'; 
 
 const GREEN = '#108B6B';
@@ -26,7 +27,7 @@ const HERO_FADE = true;
 const CAT_ZOOM = 1;
 
 export default function Account() {
-  const [dark, setDark] = useState(false);
+  const [dark, toggleDark] = useTheme();
   const panelBg = dark ? NIGHT : MINT;
   const textColor = dark ? MINT : DARK;
 
@@ -65,7 +66,7 @@ export default function Account() {
             Темна тема
           </span>
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => toggleDark()}
             role="switch"
             aria-checked={dark}
             aria-label="Темна тема"

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTheme } from '../theme';
 import { createPortal } from 'react-dom';
 
 import cat from '../assets/cat-exclamation.png';
@@ -105,7 +106,7 @@ const TEAM: Member[] = [
 ];
 
 export default function About() {
-  const [dark, setDark] = useState(false);
+  const [dark, toggleDark] = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const panelBg = dark ? NIGHT : MINT;
   const textColor = dark ? MINT : DARK;
@@ -144,7 +145,7 @@ export default function About() {
             Темна тема
           </span>
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => toggleDark()}
             role="switch"
             aria-checked={dark}
             aria-label="Темна тема"

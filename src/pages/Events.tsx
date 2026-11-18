@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTheme } from '../theme';
 import { createPortal } from 'react-dom';
 
 import event1 from '../assets/event1.jpg';
@@ -33,7 +34,7 @@ const EVENTS = [
 ];
 
 export default function Events() {
-  const [dark, setDark] = useState(false);
+  const [dark, toggleDark] = useTheme();
   /* індекс події, для якої відкрита форма реєстрації (null - закрита) */
   const [openEvent, setOpenEvent] = useState<number | null>(null);
   const panelBg = dark ? NIGHT : MINT;
@@ -74,7 +75,7 @@ export default function Events() {
             Темна тема
           </span>
           <button
-            onClick={() => setDark((d) => !d)}
+            onClick={() => toggleDark()}
             role="switch"
             aria-checked={dark}
             aria-label="Темна тема"

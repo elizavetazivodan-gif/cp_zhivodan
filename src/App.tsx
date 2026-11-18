@@ -7,7 +7,7 @@ import Proposals from './pages/Proposals';
 import Documents from './pages/Documents';
 import Polls from './pages/Polls';
 import Faq from './pages/Faq';
-import Acc from './pages/Acc';
+import Acc from './pages/Account';
 
 
 const MINT = '#ECFDF5';
