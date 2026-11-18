@@ -7,8 +7,11 @@ const px = (n: number) => Math.round(n * SCALE);
 const GREEN = '#108B6B';
 const DARK = '#003D30';
 const MINT = '#EAFBF4';
+const NIGHT = '#06231C';
 
 import LOGO_SRC from '../assets/logo.png';
+import LOGO_DARK_SRC from '../assets/logo_dark.png';
+import { useTheme } from '../theme';
 
 const MENU_KEY = 'header-menu-open';
 const BAR_KEY = 'header-bar-index';
@@ -20,7 +23,7 @@ const SHOW_ACTIVE = true;
 /* те, на скільки px лінія виступає з кожного боку за текст */
 const BAR_EXTRA = 6;
 
-/* Товщина лінії, px */
+/* товщина лінії, px */
 const BAR_THICKNESS = 6;
 
 /* параметри анімації */
@@ -72,6 +75,7 @@ const BurgerIcon: React.FC<{ color: string }> = ({ color }) => (
 );
 
 export const Header: React.FC = () => {
+  const [dark] = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(() => {
     try {
       return sessionStorage.getItem(MENU_KEY) === '1';
@@ -240,7 +244,8 @@ export const Header: React.FC = () => {
       className="w-full box-border shadow-md overflow-hidden"
       style={{
         height: px(200),
-        backgroundColor: MINT,
+        backgroundColor: dark ? NIGHT : MINT,
+        transition: `background-color ${COLOR_MS}ms ${EASE}`,
         borderBottomLeftRadius: px(72),
         borderBottomRightRadius: px(72),
         padding: `${px(28)}px ${px(28)}px ${px(36)}px`,
@@ -277,14 +282,14 @@ export const Header: React.FC = () => {
             style={{ gap: px(24), ...fadeIn() }}
           >
             <img
-              src={LOGO_SRC}
+              src={dark ? LOGO_DARK_SRC : LOGO_SRC}
               alt="Логотип ОСМ"
               className="shrink-0 object-contain"
               style={{ height: 72, width: 'auto', maxWidth: 200 }}
             />
             <div
               className="font-unbounded font-bold whitespace-nowrap"
-              style={{ color: DARK, fontSize: 24, lineHeight: 1.2 }}
+              style={{ color: dark ? MINT : DARK, fontSize: 24, lineHeight: 1.2, transition: `color ${COLOR_MS}ms ${EASE}` }}
             >
               <div>Офіційна сторінка ОСМ (ОСС)</div>
               <div>ВСП “ХКТФК НТУ “ХПІ”</div>
