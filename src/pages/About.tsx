@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import AboutMobile from '../mobile/AboutMobile';
 import { createPortal } from 'react-dom';
 
 import cat from '../assets/cat-exclamation.png';
@@ -105,7 +108,8 @@ const TEAM: Member[] = [
   },
 ];
 
-export default function About() {
+function AboutDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const panelBg = dark ? NIGHT : MINT;
@@ -179,6 +183,7 @@ export default function About() {
 
       {/* основна панель */}
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -900,4 +905,9 @@ function TeamMember({ m, dark }: { m: Member; dark: boolean }) {
       </div>
     </>
   );
+}
+
+export default function About() {
+  const isMobile = useIsMobile();
+  return isMobile ? <AboutMobile links={LINKS} team={TEAM} /> : <AboutDesktop />;
 }

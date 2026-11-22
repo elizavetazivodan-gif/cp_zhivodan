@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import FaqMobile from '../mobile/FaqMobile';
 
 import cat from '../assets/cat-exclamation.png'; 
 
@@ -67,7 +70,8 @@ const fieldStyle: React.CSSProperties = {
   fontSize: f(24),
 };
 
-export default function Faq() {
+function FaqDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   const [contact, setContact] = useState<'anon' | 'contact'>('anon');
   const [name, setName] = useState('');
@@ -136,6 +140,7 @@ export default function Faq() {
 
       {/* мʼятна панель */}
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -285,7 +290,7 @@ export default function Faq() {
         {/* чат */}
         <div style={{ width: u(1150), marginTop: u(60), display: 'flex', flexDirection: 'column', gap: u(36) }}>
           {CHAT.map((m) => (
-            <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: m.q ? 'flex-start' : 'flex-end' }}>
+            <div key={m.id} data-reveal style={{ display: 'flex', flexDirection: 'column', alignItems: m.q ? 'flex-start' : 'flex-end' }}>
               <span style={{ ...chatText, fontSize: f(24), lineHeight: u(40), color: GREEN, marginBottom: u(6) }}>
                 {m.q ? 'Студент коледжу' : 'Організація студентської'}
               </span>
@@ -366,4 +371,9 @@ function Radio({ checked, onClick, label }: { checked: boolean; onClick: () => v
       {checked && <span style={{ width: u(20), height: u(20), borderRadius: '50%', backgroundColor: GREEN }} />}
     </button>
   );
+}
+
+export default function Faq() {
+  const isMobile = useIsMobile();
+  return isMobile ? <FaqMobile chat={CHAT} /> : <FaqDesktop />;
 }

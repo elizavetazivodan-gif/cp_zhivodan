@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import EventsMobile from '../mobile/EventsMobile';
 import { createPortal } from 'react-dom';
 
 import event1 from '../assets/event1.jpg';
@@ -33,7 +36,8 @@ const EVENTS = [
   { name: 'Святкування Дня програміста' },
 ];
 
-export default function Events() {
+function EventsDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   /* індекс події, для якої відкрита форма реєстрації (null - закрита) */
   const [openEvent, setOpenEvent] = useState<number | null>(null);
@@ -109,6 +113,7 @@ export default function Events() {
 
       {/* мʼятна панель із заокругленими верхніми краями */}
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -665,4 +670,9 @@ function OvalPhoto({
       </div>
     </div>
   );
+}
+
+export default function Events() {
+  const isMobile = useIsMobile();
+  return isMobile ? <EventsMobile /> : <EventsDesktop />;
 }

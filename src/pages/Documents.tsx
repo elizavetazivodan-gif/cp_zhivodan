@@ -1,5 +1,8 @@
 import React from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import DocumentsMobile from '../mobile/DocumentsMobile';
 
 import cat from '../assets/cat-notebook.png'; 
 import doc1 from '../assets/doc-statut.jpg'; 
@@ -26,7 +29,8 @@ const f = (n: number) => u(n * TEXT_SCALE);
 
 const HERO_FADE = true;
 
-export default function Documents() {
+function DocumentsDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   const panelBg = dark ? NIGHT : MINT;
   const textColor = dark ? MINT : DARK;
@@ -100,6 +104,7 @@ export default function Documents() {
 
       {/* мʼятна панель із заокругленими верхніми краями*/}
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -288,5 +293,14 @@ function DocFrame({ src, alt, x, y, href }: { src: string; alt: string; x: numbe
         <img src={src} alt={alt} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       </a>
     </div>
+  );
+}
+
+export default function Documents() {
+  const isMobile = useIsMobile();
+  return isMobile ? (
+    <DocumentsMobile docsUrl={DOCS_URL} statutUrl={STATUT_URL} polozhennyaUrl={POLOZHENNYA_URL} />
+  ) : (
+    <DocumentsDesktop />
   );
 }

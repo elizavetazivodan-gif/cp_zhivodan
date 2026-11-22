@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import VolunteeringMobile from '../mobile/VolunteeringMobile';
 import { createPortal } from 'react-dom';
 
 import kitten from '../assets/kitten.jpeg';
@@ -30,7 +33,8 @@ const HERO_FADE = true;
 
 const INITIATIVE_NAME = 'Допоможімо безпритульним котикам';
 
-export default function Volunteering() {
+function VolunteeringDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   /* форма реєстрації на ініціативу: відкрита / закрита */
   const [openModal, setOpenModal] = useState(false);
@@ -103,6 +107,7 @@ export default function Volunteering() {
       </div>
 
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -786,4 +791,9 @@ function FundButton({ x, y, href }: { x: number; y: number; href: string }) {
       <span>до зборів</span>
     </a>
   );
-} 
+}
+
+export default function Volunteering() {
+  const isMobile = useIsMobile();
+  return isMobile ? <VolunteeringMobile /> : <VolunteeringDesktop />;
+}

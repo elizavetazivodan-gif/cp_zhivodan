@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import PollsMobile from '../mobile/PollsMobile';
 
 import cat from '../assets/cat-exclamation.png'; 
 
@@ -78,7 +81,8 @@ const pollText: React.CSSProperties = {
   lineHeight: u(34),
 };
 
-export default function Polls() {
+function PollsDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
@@ -144,6 +148,7 @@ export default function Polls() {
       </div>
 
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -356,4 +361,9 @@ function Radio({
       {checked && <span style={{ width: u(20), height: u(20), borderRadius: '50%', backgroundColor: GREEN }} />}
     </button>
   );
+}
+
+export default function Polls() {
+  const isMobile = useIsMobile();
+  return isMobile ? <PollsMobile questions={QUESTIONS} scale={SCALE_VALUES} /> : <PollsDesktop />;
 }

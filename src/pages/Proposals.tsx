@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import ProposalsMobile from '../mobile/ProposalsMobile';
 import { createPortal } from 'react-dom';
 
 import cat from '../assets/cat-exclamation.png';
@@ -23,7 +26,8 @@ const f = (n: number) => u(n * TEXT_SCALE);
 
 const HERO_FADE = true;
 
-export default function Proposals() {
+function ProposalsDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const panelBg = dark ? NIGHT : MINT;
@@ -101,6 +105,7 @@ export default function Proposals() {
       </div>
 
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -715,4 +720,9 @@ function Field({
       />
     </label>
   );
+}
+
+export default function Proposals() {
+  const isMobile = useIsMobile();
+  return isMobile ? <ProposalsMobile /> : <ProposalsDesktop />;
 }

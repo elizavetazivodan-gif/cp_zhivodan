@@ -1,5 +1,8 @@
 import React from 'react';
 import { useTheme } from '../theme';
+import { useIsMobile } from '../useIsMobile';
+import { useDesktopReveal } from '../useDesktopReveal';
+import AccountMobile from '../mobile/AccountMobile';
 import cat from '../assets/cat-helmet.png'; 
 
 const GREEN = '#108B6B';
@@ -26,7 +29,8 @@ const HERO_FADE = true;
 /* збільшення котика */
 const CAT_ZOOM = 1;
 
-export default function Account() {
+function AccountDesktop() {
+  const revealRef = useDesktopReveal<HTMLElement>();
   const [dark, toggleDark] = useTheme();
   const panelBg = dark ? NIGHT : MINT;
   const textColor = dark ? MINT : DARK;
@@ -100,6 +104,7 @@ export default function Account() {
 
       {/* мʼятна панель із заокругленими верхніми краями */}
       <main
+        ref={revealRef}
         style={{
           position: 'relative',
           width: '100%',
@@ -220,3 +225,8 @@ const Line: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 const B: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <b style={{ fontWeight: 700 }}>{children}</b>
 );
+
+export default function Account() {
+  const isMobile = useIsMobile();
+  return isMobile ? <AccountMobile /> : <AccountDesktop />;
+}

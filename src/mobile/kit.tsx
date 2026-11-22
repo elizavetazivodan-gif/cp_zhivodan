@@ -16,7 +16,7 @@ const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Onest:wght@
 
 export const useDark = () => useTheme()[0];
 
-/* базові стилі тексту  */
+/* базові стилі тексту */
 export const hStyle: React.CSSProperties = {
   margin: 0,
   fontFamily: UNBOUNDED,
@@ -38,7 +38,9 @@ export const smallUnb: React.CSSProperties = {
   lineHeight: 1.5,
 };
 
-const REVEAL_MS = 520;
+
+/* плавна поява блоків при прокручуванні */
+const REVEAL_MS = 220; // як у хедері (FADE_MS)
 const REVEAL_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 function useScrollReveal(ref: React.RefObject<HTMLElement | null>) {
@@ -63,7 +65,7 @@ function useScrollReveal(ref: React.RefObject<HTMLElement | null>) {
         entries.forEach((e) => {
           if (!e.isIntersecting) return;
           const el = e.target as HTMLElement;
-          el.style.transitionDelay = `${Math.min(n, 4) * 70}ms`;
+          el.style.transitionDelay = `${Math.min(n, 4) * 40}ms`;
           el.style.opacity = '1';
           el.style.transform = 'none';
           n += 1;
@@ -306,7 +308,7 @@ export function RadioRow({ checked, onClick, label }: { checked: boolean; onClic
   );
 }
 
-/* поле вводу (16px, щоб iOS не наближав сторінку при фокусі) */
+/* поле вводу */
 export const inputStyle: React.CSSProperties = {
   boxSizing: 'border-box',
   width: '100%',
@@ -537,6 +539,9 @@ export function ThanksCat({ children }: { children: React.ReactNode }) {
   );
 }
 
+
+/* елементи, що повторюють макет */
+
 /* овальне фото із зеленим півмісяцем збоку (геометрія як на десктопі) */
 export function OvalPhoto({
   src,
@@ -572,7 +577,7 @@ export function OvalPhoto({
   );
 }
 
-/* смужка соцмереж: зелена капсула з трьома пігулками */
+/* смужка соцмереж: зелена капсула, пігулки на всю її висоту (як у макеті) */
 export function SocialBar({ links }: { links: { instagram: string; youtube: string; tiktok: string } }) {
   const pill = (href: string, label: string, bg: string, glyph: React.ReactNode) => (
     <a
@@ -581,8 +586,8 @@ export function SocialBar({ links }: { links: { instagram: string; youtube: stri
       rel="noopener noreferrer"
       aria-label={label}
       style={{
-        width: 78,
-        height: 50,
+        width: 'min(82px, 25vw)',
+        alignSelf: 'stretch',
         borderRadius: 9999,
         backgroundColor: bg,
         display: 'flex',
@@ -594,12 +599,22 @@ export function SocialBar({ links }: { links: { instagram: string; youtube: stri
     </a>
   );
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', gap: 10, padding: '8px 0', borderRadius: 9999, backgroundColor: GREEN }}>
+    <div
+      style={{
+        height: 58,
+        borderRadius: 9999,
+        backgroundColor: GREEN,
+        display: 'flex',
+        alignItems: 'stretch',
+        justifyContent: 'center',
+        gap: 'min(22px, 5vw)',
+      }}
+    >
       {pill(
         links.instagram,
         'Instagram',
         DARK,
-        <svg viewBox="0 0 56 56" aria-hidden="true" style={{ width: 30, height: 30 }}>
+        <svg viewBox="0 0 56 56" aria-hidden="true" style={{ width: 40, height: 40 }}>
           <rect width="56" height="56" rx="14" fill={MINT} />
           <circle cx="28" cy="28" r="11" fill="none" stroke={DARK} strokeWidth="5" />
           <circle cx="43" cy="13" r="3.2" fill={DARK} />
@@ -609,7 +624,7 @@ export function SocialBar({ links }: { links: { instagram: string; youtube: stri
         links.youtube,
         'YouTube',
         MINT,
-        <svg viewBox="0 0 71 50" aria-hidden="true" style={{ width: 38, height: 27 }}>
+        <svg viewBox="0 0 71 50" aria-hidden="true" style={{ width: 50, height: 35 }}>
           <rect width="71" height="50" rx="15" fill={DARK} />
           <path d="M28 14.5v21L46.5 25z" fill={MINT} />
         </svg>
@@ -618,7 +633,7 @@ export function SocialBar({ links }: { links: { instagram: string; youtube: stri
         links.tiktok,
         'TikTok',
         DARK,
-        <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 28, height: 28 }}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: 38, height: 38 }}>
           <path
             fill={MINT}
             d="M12.525.02c1.31-.02 2.61-.01 3.91.04.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.24-1.76.15-3.58 1.15-5.09 1.25-1.9 3.42-3.13 5.73-3.23l.03 4.17c-1.34.02-2.58.74-3.26 1.88-.34.56-.54 1.23-.55 1.89-.01 1.05.41 2.08 1.16 2.82.91.9 2.29 1.28 3.56.96 1.26-.31 2.29-1.28 2.65-2.54.17-.61.22-1.25.21-1.88-.04-4.83-.01-9.67-.03-14.5z"
