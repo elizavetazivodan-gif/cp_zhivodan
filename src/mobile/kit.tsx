@@ -39,8 +39,9 @@ export const smallUnb: React.CSSProperties = {
 };
 
 
-/* плавна поява блоків при прокручуванні */
-const REVEAL_MS = 220; // як у хедері (FADE_MS)
+/* плавна поява блоків при прокручуванні: прямі діти панелі та елементи з data-reveal
+   стартують прозорими й зсунутими вниз, а в межах екрана виїжджають на місце */
+const REVEAL_MS = 220; // як у хедері 
 const REVEAL_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 function useScrollReveal(ref: React.RefObject<HTMLElement | null>) {
@@ -94,7 +95,7 @@ export function MPage({ children, overlap }: { children: React.ReactNode; overla
   const mainRef = useRef<HTMLElement>(null);
   useScrollReveal(mainRef);
   return (
-    <div style={{ backgroundColor: GREEN, minHeight: '100vh', overflowX: 'hidden' }}>
+    <div style={{ backgroundColor: GREEN, minHeight: '100vh', overflowX: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <style>{FONTS}</style>
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '16px 0 18px' }}>
@@ -140,6 +141,7 @@ export function MPage({ children, overlap }: { children: React.ReactNode; overla
           color: dark ? MINT : DARK,
           borderTopLeftRadius: 32,
           borderTopRightRadius: 32,
+          flexGrow: 1,
           padding: '28px 16px 40px',
           overflow: overlap ? 'visible' : 'hidden',
           display: 'flex',
@@ -154,7 +156,7 @@ export function MPage({ children, overlap }: { children: React.ReactNode; overla
   );
 }
 
-/* зелена плашка-заголовок розділу (як у макеті: великі літери, стадіон) */
+/* зелена плашка-заголовок розділу */
 export function Pill({ children }: { children: React.ReactNode }) {
   return (
     <h2
@@ -516,12 +518,12 @@ export function MobileRegistrationModal({
         </div>
 
         {sent && (
-          <>
-            <p style={{ margin: 0, padding: '4px 8px', textAlign: 'center', fontFamily: UNBOUNDED, fontWeight: 700, fontSize: 16, lineHeight: 1.45, color: MINT }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img src={cat} alt="Котик зі знаком оклику" style={{ width: '40%', flexShrink: 0, objectFit: 'contain' }} />
+            <p style={{ margin: 0, flex: 1, textAlign: 'center', fontFamily: UNBOUNDED, fontWeight: 700, fontSize: 14, lineHeight: 1.4, color: MINT }}>
               {thanks}
             </p>
-            <img src={cat} alt="Котик зі знаком оклику" style={{ width: 180, alignSelf: 'center', objectFit: 'contain' }} />
-          </>
+          </div>
         )}
       </div>
     </div>,
@@ -532,9 +534,9 @@ export function MobileRegistrationModal({
 /* кінцівка форм «Дякуємо» з котиком (для сторінок без модалки) */
 export function ThanksCat({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-      <p style={{ margin: 0, textAlign: 'center', fontFamily: UNBOUNDED, fontWeight: 700, fontSize: 16, lineHeight: 1.45 }}>{children}</p>
-      <img src={cat} alt="Котик зі знаком оклику" style={{ width: 180, objectFit: 'contain' }} />
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <img src={cat} alt="Котик зі знаком оклику" style={{ width: '40%', flexShrink: 0, objectFit: 'contain' }} />
+      <p style={{ margin: 0, flex: 1, textAlign: 'center', fontFamily: UNBOUNDED, fontWeight: 700, fontSize: 14, lineHeight: 1.4 }}>{children}</p>
     </div>
   );
 }
@@ -577,7 +579,7 @@ export function OvalPhoto({
   );
 }
 
-/* смужка соцмереж: зелена капсула, пігулки на всю її висоту (як у макеті) */
+/* смужка соцмереж */
 export function SocialBar({ links }: { links: { instagram: string; youtube: string; tiktok: string } }) {
   const pill = (href: string, label: string, bg: string, glyph: React.ReactNode) => (
     <a
